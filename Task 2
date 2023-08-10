@@ -1,0 +1,65 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.StringTokenizer;
+
+public class WordCounter {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        // Step 1: Prompt the user for input
+        System.out.print("Enter a text or provide a file path to count words: ");
+        String userInput = scanner.nextLine();
+
+        // Step 2: Read input text or file
+        String content = "";
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(userInput));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                content += line + " ";
+            }
+            reader.close();
+        } catch (IOException e) {
+            content = userInput;
+        }
+
+        // Step 3: Split the content into words
+        StringTokenizer tokenizer = new StringTokenizer(content, " \t\n\r\f,.:;?![]{}()");
+
+        // Step 4: Initialize counter
+        Map<String, Integer> wordCounter = new HashMap<>();
+
+        // Step 5: Count words
+        while (tokenizer.hasMoreTokens()) {
+            String word = tokenizer.nextToken().toLowerCase();
+            wordCounter.put(word, wordCounter.getOrDefault(word, 0) + 1);
+        }
+
+        // Step 7: Ignore common words or stop words
+        String[] stopWords = {"a", "an", "the", "is", "in", "of", "and", "to", "with", "for", "on", "as"};
+        for (String stopWord : stopWords) {
+            wordCounter.remove(stopWord);
+        }
+
+        // Step 8: Display word count and statistics
+        int totalWordCount = wordCounter.values().stream().mapToInt(Integer::intValue).sum();
+        int uniqueWordCount = wordCounter.size();
+
+        System.out.println("Total word count: " + totalWordCount);
+        System.out.println("Unique word count: " + uniqueWordCount);
+        System.out.println("Word frequency:");
+        for (Map.Entry<String, Integer> entry : wordCounter.entrySet()) {
+            System.out.println(entry.getKey() + ": " + entry.getValue());
+        }
+
+        // Step 9: Implement input validation
+
+        // Step 10: Adding a graphical user interface (GUI)
+
+        scanner.close();
+    }
+}
